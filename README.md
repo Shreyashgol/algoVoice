@@ -49,24 +49,24 @@
 
 ```mermaid
 flowchart TD
-    User([User / Creator]) --> UI[AlgoVoice React Frontend]
-    UI -->|API Requests| FastAPI[FastAPI Backend Server]
+    User([User / Creator]) --> UI["AlgoVoice React Frontend"]
+    UI -->|API Requests| FastAPI["FastAPI Backend Server"]
 
-    subgraph "Audiobook Pipeline"
-        PDF[PDF Manuscript] --> Extract[pypdf Extractor]
-        Extract --> GroqScript[Groq LLM Script Doctor]
-        GroqScript --> CleanScript[Clean Spoken Prose]
-        CleanScript --> GroqDirector[Groq LLM Voice Director]
-        GroqDirector --> UnifiedVoice[Unified Voice Persona]
-        CleanScript --> Chunking[Sentence Chunker <400 chars]
-        Chunking --> TTSBatch[Qwen3-TTS / Synthesizer]
+    subgraph Pipeline ["Audiobook Production Engine"]
+        PDF["PDF Manuscript"] --> Extract["pypdf Extractor"]
+        Extract --> GroqScript["Groq LLM Script Doctor"]
+        GroqScript --> CleanScript["Clean Spoken Prose"]
+        CleanScript --> GroqDirector["Groq LLM Voice Director"]
+        GroqDirector --> UnifiedVoice["Unified Voice Persona"]
+        CleanScript --> Chunking["Sentence Chunker &lt;400 chars"]
+        Chunking --> TTSBatch["Qwen3-TTS / Synthesizer"]
         UnifiedVoice -.-> TTSBatch
-        TTSBatch --> Concat[Pause-Padded WAV Concatenation]
+        TTSBatch --> Concat["Pause-Padded WAV Concatenation"]
     end
 
-    FastAPI --> Audiobook Pipeline
-    Concat --> AudioCache[Audio Disk Cache & History]
-    AudioCache --> MasterPlayer[Studio Master Player & Streaming]
+    FastAPI --> PDF
+    Concat --> AudioCache["Audio Disk Cache & History"]
+    AudioCache --> MasterPlayer["Studio Master Player & Streaming"]
     MasterPlayer --> UI
 ```
 
